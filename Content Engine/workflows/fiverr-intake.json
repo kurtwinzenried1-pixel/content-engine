@@ -1,0 +1,116 @@
+{
+  "name": "Fiverr - Intake to Engine",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fiverr-job",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "acac0667-8109-4f73-b0b2-a5caf68efe31",
+      "name": "Fiverr Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "4a9ca3d9-6b31-4ff0-a3d0-699f5a3b901d"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://engine-api:8080/api/jobs",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json.body) }}",
+        "options": {}
+      },
+      "id": "538b7cb7-e934-4657-a483-ebfe11aaead4",
+      "name": "Create Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://engine-api:8080/api/jobs/{{$json.job_id}}/execute",
+        "options": {}
+      },
+      "id": "76523995-f4d8-41e5-bef9-e461df898586",
+      "name": "Execute Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "68f4c829-d04d-45b6-be91-bbbf1759a455",
+      "name": "Return Job",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Fiverr Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Job": {
+      "main": [
+        [
+          {
+            "node": "Execute Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Job": {
+      "main": [
+        [
+          {
+            "node": "Return Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "tags": [],
+  "id": "3b7eefef-545c-4681-bb3c-46723672b805",
+  "versionId": "4fead039-a167-4bd8-ba2c-f82402025f1b"
+}

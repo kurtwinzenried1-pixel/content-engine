@@ -1,0 +1,65 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Brand Profile",
+  "type": "object",
+  "required": [
+    "company",
+    "industry",
+    "target_audience",
+    "tone",
+    "language"
+  ],
+  "properties": {
+    "company": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "target_audience": {
+      "type": "string"
+    },
+    "products_services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "usps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tone": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "cta": {
+      "type": "string"
+    },
+    "brand_colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "do": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dont": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

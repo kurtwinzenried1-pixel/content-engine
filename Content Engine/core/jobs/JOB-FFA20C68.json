@@ -1,0 +1,27 @@
+{
+  "job_type": "social_content",
+  "company": "API Executor Test GmbH",
+  "language": "de",
+  "quantity": 1,
+  "industry": "Webdesign",
+  "target_audience": "Schweizer KMU",
+  "tone": "professionell und klar",
+  "cta": "Jetzt mehr erfahren",
+  "region": "ch-de",
+  "products_services": [
+    "Webdesign"
+  ],
+  "usps": [
+    "Schnell",
+    "Professionell"
+  ],
+  "brand_colors": [],
+  "required_terms": [],
+  "excluded_terms": [],
+  "job_id": "JOB-FFA20C68",
+  "status": "completed",
+  "result": {
+    "output": "C:\\Projects\\ai-fiverr-social-content\\exports\\JOB-FFA20C68\\content\\social-posts.json",
+    "count": 1
+  }
+}
