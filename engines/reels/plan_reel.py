@@ -53,6 +53,7 @@ Ziel:
 - kein unnötiges Intro
 - zusammenhängender Gedanke
 - natürliche Schnittpunkte
+- voiceover_text: natürlicher Sprechertext mit ca. 30 bis 45 Wörtern, passend zur Reel-Länge
 
 Liefere exakt:
 
@@ -66,7 +67,8 @@ Liefere exakt:
     "subtitle_style": "clean-bold",
     "aspect_ratio": "9:16",
     "caption": "...",
-    "cta": "..."
+    "cta": "...",
+    "voiceover_text": "..."
   }}
 }}
 """
@@ -102,6 +104,7 @@ Liefere exakt:
         "aspect_ratio",
         "caption",
         "cta",
+        "voiceover_text",
     ]
 
     missing = [
@@ -175,3 +178,4 @@ if __name__ == "__main__":
     print(
         f"OUTPUT: {output}"
     )
+

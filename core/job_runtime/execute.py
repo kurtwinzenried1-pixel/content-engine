@@ -13,7 +13,7 @@ from engines.creative.render_graphics import render as render_graphics
 from engines.leads.generate_leads import generate as generate_leads
 from engines.reels.transcribe import transcribe_job
 from engines.reels.plan_reel import plan as plan_reel
-from engines.reels.render_reel import render_job
+from engines.reels.render_reel_v2 import render_job
 
 
 JOBS_DIR = ROOT / "core" / "jobs"
@@ -330,3 +330,4 @@ if __name__ == "__main__":
     print(
         f"STATUS={result['status']}"
     )
+
