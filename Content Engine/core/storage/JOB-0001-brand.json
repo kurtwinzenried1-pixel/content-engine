@@ -1,0 +1,29 @@
+﻿{
+  "company": "Example GmbH",
+  "website": "https://example.com",
+  "industry": "Digital Services",
+  "target_audience": "Kleine und mittlere Unternehmen in der Schweiz",
+  "products_services": [
+    "Digitale Dienstleistungen"
+  ],
+  "usps": [
+    "Einfach",
+    "Schnell",
+    "Professionell"
+  ],
+  "tone": "professionell, klar, modern",
+  "language": "de",
+  "cta": "Jetzt mehr erfahren",
+  "brand_colors": [
+    "#111111",
+    "#FFFFFF"
+  ],
+  "do": [
+    "kurze klare Aussagen",
+    "konkreten Kundennutzen nennen"
+  ],
+  "dont": [
+    "übertriebene Versprechen",
+    "unnötig komplizierte Fachsprache"
+  ]
+}

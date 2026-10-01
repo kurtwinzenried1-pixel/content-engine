@@ -1,0 +1,24 @@
+{
+  "tone": "professionell, klar und modern",
+  "cta": "Jetzt mehr erfahren",
+  "industry": "Digitale Dienstleistungen",
+  "usps": [
+    "Schnell",
+    "Einfach"
+  ],
+  "target_audience": "Schweizer KMU",
+  "job_id": "JOB-SOCIAL-DYNAMIC",
+  "company": "Dynamic Test GmbH",
+  "status": "completed",
+  "language": "de",
+  "quantity": 2,
+  "products_services": [
+    "Webdesign",
+    "Content"
+  ],
+  "job_type": "social_content",
+  "result": {
+    "output": "C:\\Projects\\ai-fiverr-social-content\\exports\\JOB-SOCIAL-DYNAMIC\\content\\social-posts.json",
+    "count": 2
+  }
+}

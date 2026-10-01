@@ -1,0 +1,94 @@
+# SPDX-FileCopyrightText: none
+# SPDX-License-Identifier: CC0-1.0
+
+before_script:
+  - python --version  # For debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
+
+include:
+  - project: sysadmin/ci-utilities
+    file:
+      - /gitlab-templates/reuse-lint.yml
+
+reuse:
+  before_script: echo "Skip before_script"
+
+image: python:latest
+
+stages:
+  - build
+  - test
+  - deploy
+  - validate
+
+build:
+  stage: build
+  script:
+    - pip install -r build-requirements.txt
+    - python setup.py bdist_wheel
+    - pip install dist/*
+  artifacts:
+    paths:
+      - dist/*.whl
+
+test:
+  stage: test
+  script:
+    - pip install -r test-requirements.txt
+    - pip install dist/*
+    - echo "Running unit tests..."
+    - pytest --cov=./ --junitxml=JUnitTestResults.xml
+    - echo "Linting code..."
+    - flake8 --show-source --statistics --tee --output-file=flake8Output.txt
+    - echo "Done!"
+  after_script:
+    - source venv/bin/activate
+    - pip install flake8-junit-report
+    - flake8_junit flake8Output.txt JUnitLintResults.xml
+  artifacts:
+    expire_in: 3 days
+    when: always
+    reports:
+      junit: JUnit*Results.xml
+
+
+deploy-to-gitlab:
+  stage: deploy
+  when: manual
+  environment: development
+  script:
+    - pip install twine
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+.pypi-deploy:
+  stage: deploy
+  when: manual
+  environment: production
+  script:
+    - git clone https://invent.kde.org/sysadmin/ci-utilities.git
+    - git clone https://invent.kde.org/sysadmin/ci-notary-service.git
+    - pip install twine pyyaml paramiko pkginfo
+    - python3 -u ci-notary-service/publishonpypi.py --config ci-utilities/signing/publishonpypi.ini --repository $PYPI_REPO_NAME dist
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    expire_in: 3 days
+    when: always
+    paths:
+      - task.log
+      - task-debug.log
+
+deploy-to-test-pypi-org:
+  extends: .pypi-deploy
+  variables:
+    PYPI_REPO_NAME: testpypi
+
+deploy-to-pypi-org:
+  extends: .pypi-deploy
+  variables:
+    PYPI_REPO_NAME: pypi

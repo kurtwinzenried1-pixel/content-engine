@@ -1,0 +1,52 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fiverr Production Job",
+  "type": "object",
+  "required": [
+    "job_id",
+    "job_type",
+    "company",
+    "language",
+    "quantity",
+    "status"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string"
+    },
+    "job_type": {
+      "type": "string",
+      "enum": [
+        "social_content",
+        "seo_content",
+        "graphics",
+        "reels",
+        "lead_generation"
+      ]
+    },
+    "company": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "default": "de"
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "processing",
+        "qa",
+        "completed",
+        "failed"
+      ]
+    }
+  }
+}
