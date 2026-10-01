@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import sys
 from pathlib import Path
@@ -42,6 +42,25 @@ if not API_BASE:
     raise RuntimeError(
         "SHOTSTACK_API_BASE fehlt."
     )
+
+
+def text_clip(text, start, length, size, vertical):
+    return {
+        "asset": {
+            "type": "rich-text",
+            "text": str(text),
+            "font": {
+                "size": size,
+                "color": "#ffffff",
+            },
+            "align": {
+                "horizontal": "center",
+                "vertical": vertical,
+            },
+        },
+        "start": start,
+        "length": length,
+    }
 
 
 def render_job(job_id: str):
@@ -96,14 +115,8 @@ def render_job(job_id: str):
 
     reel = plan["reel"]
 
-    start = float(
-        reel["start"]
-    )
-
-    end = float(
-        reel["end"]
-    )
-
+    start = float(reel["start"])
+    end = float(reel["end"])
     duration = end - start
 
     if duration <= 0:
@@ -111,48 +124,97 @@ def render_job(job_id: str):
             "Ungültige Reel-Dauer."
         )
 
+    title = reel.get("title", "")
+    hook = reel.get("hook", "")
+    caption = reel.get("caption", "")
+    cta = reel.get("cta", "")
+
+    title_length = min(3.0, duration)
+    hook_length = min(4.0, duration)
+
+    cta_length = min(4.0, duration)
+    cta_start = max(0.0, duration - cta_length)
+
+    caption_start = min(4.0, duration)
+    caption_end = max(caption_start, cta_start)
+    caption_length = max(
+        0.0,
+        caption_end - caption_start
+    )
+
+    tracks = [
+        {
+            "clips": [
+                {
+                    "asset": {
+                        "type": "video",
+                        "src": video_url,
+                        "trim": start,
+                    },
+                    "start": 0,
+                    "length": duration,
+                    "fit": "cover",
+                }
+            ]
+        }
+    ]
+
+    if title:
+        tracks.append({
+            "clips": [
+                text_clip(
+                    title,
+                    0,
+                    title_length,
+                    48,
+                    "top",
+                )
+            ]
+        })
+
+    if hook:
+        tracks.append({
+            "clips": [
+                text_clip(
+                    hook,
+                    0,
+                    hook_length,
+                    54,
+                    "bottom",
+                )
+            ]
+        })
+
+    if caption and caption_length > 0:
+        tracks.append({
+            "clips": [
+                text_clip(
+                    caption,
+                    caption_start,
+                    caption_length,
+                    36,
+                    "bottom",
+                )
+            ]
+        })
+
+    if cta:
+        tracks.append({
+            "clips": [
+                text_clip(
+                    cta,
+                    cta_start,
+                    cta_length,
+                    46,
+                    "center",
+                )
+            ]
+        })
+
     payload = {
         "timeline": {
             "background": "#000000",
-            "tracks": [
-                {
-                    "clips": [
-                        {
-                            "asset": {
-                                "type": "video",
-                                "src": video_url,
-                                "trim": start,
-                            },
-                            "start": 0,
-                            "length": duration,
-                            "fit": "cover",
-                        }
-                    ]
-                },
-                {
-                    "clips": [
-                        {
-                            "asset": {
-                                "type": "rich-text",
-                                "text": reel["hook"],
-                                "font": {
-                                    "size": 54,
-                                    "color": "#ffffff",
-                                },
-                                "align": {
-                                    "horizontal": "center",
-                                    "vertical": "bottom",
-                                },
-                            },
-                            "start": 0,
-                            "length": min(
-                                4,
-                                duration,
-                            ),
-                        }
-                    ]
-                },
-            ],
+            "tracks": tracks,
         },
         "output": {
             "format": "mp4",
@@ -175,7 +237,6 @@ def render_job(job_id: str):
     response.raise_for_status()
 
     data = response.json()
-
     render_id = data["response"]["id"]
 
     output_dir.mkdir(
@@ -193,6 +254,10 @@ def render_job(job_id: str):
             {
                 "render_id": render_id,
                 "source_video": video_url,
+                "title": title,
+                "hook": hook,
+                "caption": caption,
+                "cta": cta,
                 "payload": payload,
             },
             ensure_ascii=False,
