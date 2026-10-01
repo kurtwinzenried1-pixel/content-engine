@@ -1,0 +1,9 @@
+﻿{
+  "job_id": "JOB-0001",
+  "job_type": "social_content",
+  "company": "Example GmbH",
+  "website": "https://example.com",
+  "language": "de",
+  "quantity": 30,
+  "status": "queued"
+}

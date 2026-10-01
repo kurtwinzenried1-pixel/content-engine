@@ -1,0 +1,18 @@
+﻿model_list:
+  - model_name: content-bulk
+    litellm_params:
+      model: together_ai/Qwen/Qwen3.5-9B
+      api_key: os.environ/TOGETHER_API_KEY
+
+  - model_name: content-local
+    litellm_params:
+      model: ollama/qwen3:8b
+      api_base: os.environ/OLLAMA_API_BASE
+      input_cost_per_token: 0
+      output_cost_per_token: 0
+
+router_settings:
+  routing_strategy: simple-shuffle
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

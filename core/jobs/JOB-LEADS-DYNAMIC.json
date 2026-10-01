@@ -1,0 +1,17 @@
+﻿{
+    "query":  "Zahnarzt Praxis Schweiz \"Kontakt\"",
+    "required_terms":  [
+                           "zahnarzt",
+                           "zahnärzt",
+                           "zahnpraxis",
+                           "zahnklinik",
+                           "dental"
+                       ],
+    "job_id":  "JOB-LEADS-DYNAMIC",
+    "region":  "ch-de",
+    "company":  "Zahnarzt Leads Schweiz",
+    "status":  "queued",
+    "language":  "de",
+    "quantity":  3,
+    "job_type":  "lead_generation"
+}

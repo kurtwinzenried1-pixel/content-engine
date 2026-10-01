@@ -1,0 +1,58 @@
+services:
+  litellm:
+    image: docker.litellm.ai/berriai/litellm:latest
+    container_name: fiverr-litellm
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4000:4000"
+    env_file:
+      - ../../.env
+    volumes:
+      - ../litellm/config.yaml:/app/config.yaml:ro
+    command:
+      - "--config"
+      - "/app/config.yaml"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  engine-api:
+    image: fiverr-engine-api:local
+    container_name: fiverr-engine-api
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - ../../.env
+    environment:
+      LITELLM_URL: http://litellm:4000/v1/chat/completions
+    depends_on:
+      - litellm
+    volumes:
+      - engine_jobs:/app/core/jobs
+      - engine_exports:/app/exports
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: fiverr-n8n
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    env_file:
+      - ../../.env
+    environment:
+      TZ: Europe/Zurich
+      GENERIC_TIMEZONE: Europe/Zurich
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: http
+      N8N_SECURE_COOKIE: "false"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - engine_exports:/data/exports
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  n8n_data:
+  engine_jobs:
+  engine_exports:
